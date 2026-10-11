@@ -1,0 +1,700 @@
+# File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+from __future__ import annotations
+
+from typing import Dict, Union, Iterable
+from typing_extensions import Literal, Required, TypeAlias, TypedDict
+
+from ..._types import SequenceNotStr
+
+__all__ = [
+    "BoxCreateParams",
+    "AccessDelegation",
+    "MountConfig",
+    "MountConfigAuth",
+    "MountConfigAuthAws",
+    "MountConfigAuthAwsSandboxesSandboxAwsMountRoleAuthConfig",
+    "MountConfigAuthAwsSandboxesSandboxAwsMountStaticAuthConfig",
+    "MountConfigAuthAwsSandboxesSandboxAwsMountStaticAuthConfigAccessKeyID",
+    "MountConfigAuthAwsSandboxesSandboxAwsMountStaticAuthConfigSecretAccessKey",
+    "MountConfigAuthGcp",
+    "MountConfigAuthGcpServiceAccountJson",
+    "MountConfigMount",
+    "MountConfigMountSandboxapiS3BucketMountSpec",
+    "MountConfigMountSandboxapiS3BucketMountSpecS3",
+    "MountConfigMountSandboxapiS3BucketMountSpecCache",
+    "MountConfigMountSandboxapiS3BucketMountSpecContexthub",
+    "MountConfigMountSandboxapiS3BucketMountSpecGcs",
+    "MountConfigMountSandboxapiS3BucketMountSpecGit",
+    "MountConfigMountSandboxapiS3BucketMountSpecGitRef",
+    "MountConfigMountSandboxapiGcsBucketMountSpec",
+    "MountConfigMountSandboxapiGcsBucketMountSpecGcs",
+    "MountConfigMountSandboxapiGcsBucketMountSpecCache",
+    "MountConfigMountSandboxapiGcsBucketMountSpecContexthub",
+    "MountConfigMountSandboxapiGcsBucketMountSpecGit",
+    "MountConfigMountSandboxapiGcsBucketMountSpecGitRef",
+    "MountConfigMountSandboxapiGcsBucketMountSpecS3",
+    "MountConfigMountSandboxapiGitRepoMountSpec",
+    "MountConfigMountSandboxapiGitRepoMountSpecGit",
+    "MountConfigMountSandboxapiGitRepoMountSpecGitRef",
+    "MountConfigMountSandboxapiGitRepoMountSpecCache",
+    "MountConfigMountSandboxapiGitRepoMountSpecContexthub",
+    "MountConfigMountSandboxapiGitRepoMountSpecGcs",
+    "MountConfigMountSandboxapiGitRepoMountSpecS3",
+    "MountConfigMountSandboxapiContextHubRepoMountSpec",
+    "MountConfigMountSandboxapiContextHubRepoMountSpecContexthub",
+    "MountConfigMountSandboxapiContextHubRepoMountSpecCache",
+    "MountConfigMountSandboxapiContextHubRepoMountSpecGcs",
+    "MountConfigMountSandboxapiContextHubRepoMountSpecGit",
+    "MountConfigMountSandboxapiContextHubRepoMountSpecGitRef",
+    "MountConfigMountSandboxapiContextHubRepoMountSpecS3",
+    "ProxyConfig",
+    "ProxyConfigAccessControl",
+    "ProxyConfigCallback",
+    "ProxyConfigCallbackRequestHeader",
+    "ProxyConfigRule",
+    "ProxyConfigRuleAws",
+    "ProxyConfigRuleAwsSandboxesProxyAwsRoleConfig",
+    "ProxyConfigRuleAwsSandboxesProxyAwsStaticConfig",
+    "ProxyConfigRuleAwsSandboxesProxyAwsStaticConfigAccessKeyID",
+    "ProxyConfigRuleAwsSandboxesProxyAwsStaticConfigSecretAccessKey",
+    "ProxyConfigRuleGcp",
+    "ProxyConfigRuleGcpServiceAccountJson",
+    "ProxyConfigRuleHeader",
+    "RunConfig",
+]
+
+
+class BoxCreateParams(TypedDict, total=False):
+    access_delegation: AccessDelegation
+    """
+    AccessDelegation lets code inside the sandbox call the LangSmith API as you,
+    with at most the permissions granted here. Omit for no access.
+    """
+
+    cpu_millicores: int
+    """CPUMillicores optionally requests CPU at millicore granularity (e.g.
+
+    500 = 0.5 vCPU); takes precedence over VCPUs. Fractional (sub-vCPU) values are
+    not available for every sandbox.
+    """
+
+    delete_after_stop_seconds: int
+
+    env_vars: Dict[str, str]
+
+    fs_capacity_bytes: int
+
+    idle_ttl_seconds: int
+
+    labels: Dict[str, str]
+    """
+    Labels are free-form key/value metadata persisted with the sandbox and returned
+    on reads. Labels from the source snapshot are inherited unless overridden here.
+    """
+
+    mem_bytes: int
+    """Memory for the sandbox, in bytes.
+
+    Memory is tied to CPU at 4 GiB per vCPU: omit it and it follows that ratio; set
+    it and it must stay within 50% of the ratio for the requested CPU, so a 1 vCPU
+    sandbox accepts 2-6 GiB. Setting memory without CPU derives the CPU from the
+    same ratio. Maximum 64 GiB.
+    """
+
+    mount_config: MountConfig
+
+    name: str
+
+    preserve_memory_on_stop: bool
+    """
+    PreserveMemoryOnStop, when true, suspends the sandbox's memory on a voluntary
+    stop (idle timeout or explicit stop) so the next start resumes from where it
+    left off. Default false discards memory and keeps only the filesystem, so the
+    next start is a cold boot. Restarts triggered by infrastructure maintenance
+    always preserve memory regardless of this setting.
+    """
+
+    proxy_config: ProxyConfig
+
+    restore_memory: bool
+    """RestoreMemory selects how the sandbox handles a snapshot's captured memory:
+
+    nil → if-present: resume from memory when the snapshot has it, else cold-boot
+    (default). true → always: resume from memory; rejected if the snapshot has none.
+    false → never: always cold-boot.
+
+    Applies to this request only.
+    """
+
+    run_config: RunConfig
+    """
+    RunConfig overrides the snapshot's run config for this sandbox: user and
+    work_dir replace the snapshot's, env_vars merge over it. The result is what the
+    sandbox boots with, and what a snapshot captured from it carries.
+    """
+
+    snapshot: str
+    """Snapshot is a Docker-style name or name:tag reference to boot from.
+
+    A bare name resolves to name:latest.
+    """
+
+    snapshot_id: str
+
+    snapshot_name: str
+    """
+    SnapshotName is a synonym for Snapshot, accepted for compatibility with clients
+    that predate it. Set one or the other.
+    """
+
+    tag_value_ids: SequenceNotStr[str]
+
+    vcpus: int
+
+
+class AccessDelegation(TypedDict, total=False):
+    """
+    AccessDelegation lets code inside the sandbox call the LangSmith API as you, with at most the permissions granted here. Omit for no access.
+    """
+
+    mode: Required[Literal["INHERIT", "EXPLICIT"]]
+
+    permissions: SequenceNotStr[str]
+
+
+class MountConfigAuthAwsSandboxesSandboxAwsMountRoleAuthConfig(TypedDict, total=False):
+    role_arn: Required[str]
+    """
+    IAM role to assume with permissions scoped to the configured S3 mounts. Mutually
+    exclusive with static credentials. Configure only at creation.
+    """
+
+
+class MountConfigAuthAwsSandboxesSandboxAwsMountStaticAuthConfigAccessKeyID(TypedDict, total=False):
+    type: Required[Literal["plaintext", "opaque", "workspace_secret"]]
+
+    is_set: bool
+
+    value: str
+
+
+class MountConfigAuthAwsSandboxesSandboxAwsMountStaticAuthConfigSecretAccessKey(TypedDict, total=False):
+    type: Required[Literal["plaintext", "opaque", "workspace_secret"]]
+
+    is_set: bool
+
+    value: str
+
+
+class MountConfigAuthAwsSandboxesSandboxAwsMountStaticAuthConfig(TypedDict, total=False):
+    access_key_id: Required[MountConfigAuthAwsSandboxesSandboxAwsMountStaticAuthConfigAccessKeyID]
+
+    secret_access_key: Required[MountConfigAuthAwsSandboxesSandboxAwsMountStaticAuthConfigSecretAccessKey]
+
+    role_arn: Literal[""]
+    """
+    IAM role to assume with permissions scoped to the configured S3 mounts. Mutually
+    exclusive with static credentials. Configure only at creation.
+    """
+
+
+MountConfigAuthAws: TypeAlias = Union[
+    MountConfigAuthAwsSandboxesSandboxAwsMountRoleAuthConfig, MountConfigAuthAwsSandboxesSandboxAwsMountStaticAuthConfig
+]
+
+
+class MountConfigAuthGcpServiceAccountJson(TypedDict, total=False):
+    type: Required[Literal["plaintext", "opaque", "workspace_secret"]]
+
+    is_set: bool
+
+    value: str
+
+
+class MountConfigAuthGcp(TypedDict, total=False):
+    service_account_json: Required[MountConfigAuthGcpServiceAccountJson]
+
+
+class MountConfigAuth(TypedDict, total=False):
+    aws: MountConfigAuthAws
+
+    gcp: MountConfigAuthGcp
+
+
+class MountConfigMountSandboxapiS3BucketMountSpecS3(TypedDict, total=False):
+    bucket: Required[str]
+
+    region: Required[str]
+
+    endpoint_url: str
+
+    path_style: bool
+
+    prefix: str
+
+
+class MountConfigMountSandboxapiS3BucketMountSpecCache(TypedDict, total=False):
+    max_size_bytes: int
+
+    writeback_seconds: int
+
+
+class MountConfigMountSandboxapiS3BucketMountSpecContexthub(TypedDict, total=False):
+    repo: Required[str]
+    """Repo is the Context Hub repository to sync, as "owner/repo" (e.g.
+
+    "-/my-agent", where "-" is the current workspace). The repo's latest commit tree
+    is mirrored into the mount path.
+    """
+
+    initial_pull_only: bool
+    """
+    InitialPullOnly syncs the repo once at startup instead of polling for updates
+    for the sandbox's lifetime.
+    """
+
+
+class MountConfigMountSandboxapiS3BucketMountSpecGcs(TypedDict, total=False):
+    bucket: Required[str]
+
+    prefix: str
+
+
+class MountConfigMountSandboxapiS3BucketMountSpecGitRef(TypedDict, total=False):
+    name: Required[str]
+
+    type: Required[Literal["branch", "tag"]]
+
+
+class MountConfigMountSandboxapiS3BucketMountSpecGit(TypedDict, total=False):
+    remote_url: Required[str]
+
+    ref: MountConfigMountSandboxapiS3BucketMountSpecGitRef
+
+    refresh_interval_seconds: int
+
+
+class MountConfigMountSandboxapiS3BucketMountSpec(TypedDict, total=False):
+    id: Required[str]
+
+    mount_path: Required[str]
+
+    s3: Required[MountConfigMountSandboxapiS3BucketMountSpecS3]
+
+    type: Required[Literal["s3", "gcs", "git", "contexthub"]]
+
+    cache: MountConfigMountSandboxapiS3BucketMountSpecCache
+
+    contexthub: MountConfigMountSandboxapiS3BucketMountSpecContexthub
+
+    gcs: MountConfigMountSandboxapiS3BucketMountSpecGcs
+
+    git: MountConfigMountSandboxapiS3BucketMountSpecGit
+
+    read_only: bool
+
+
+class MountConfigMountSandboxapiGcsBucketMountSpecGcs(TypedDict, total=False):
+    bucket: Required[str]
+
+    prefix: str
+
+
+class MountConfigMountSandboxapiGcsBucketMountSpecCache(TypedDict, total=False):
+    max_size_bytes: int
+
+    writeback_seconds: int
+
+
+class MountConfigMountSandboxapiGcsBucketMountSpecContexthub(TypedDict, total=False):
+    repo: Required[str]
+    """Repo is the Context Hub repository to sync, as "owner/repo" (e.g.
+
+    "-/my-agent", where "-" is the current workspace). The repo's latest commit tree
+    is mirrored into the mount path.
+    """
+
+    initial_pull_only: bool
+    """
+    InitialPullOnly syncs the repo once at startup instead of polling for updates
+    for the sandbox's lifetime.
+    """
+
+
+class MountConfigMountSandboxapiGcsBucketMountSpecGitRef(TypedDict, total=False):
+    name: Required[str]
+
+    type: Required[Literal["branch", "tag"]]
+
+
+class MountConfigMountSandboxapiGcsBucketMountSpecGit(TypedDict, total=False):
+    remote_url: Required[str]
+
+    ref: MountConfigMountSandboxapiGcsBucketMountSpecGitRef
+
+    refresh_interval_seconds: int
+
+
+class MountConfigMountSandboxapiGcsBucketMountSpecS3(TypedDict, total=False):
+    bucket: Required[str]
+
+    region: Required[str]
+
+    endpoint_url: str
+
+    path_style: bool
+
+    prefix: str
+
+
+class MountConfigMountSandboxapiGcsBucketMountSpec(TypedDict, total=False):
+    id: Required[str]
+
+    gcs: Required[MountConfigMountSandboxapiGcsBucketMountSpecGcs]
+
+    mount_path: Required[str]
+
+    type: Required[Literal["s3", "gcs", "git", "contexthub"]]
+
+    cache: MountConfigMountSandboxapiGcsBucketMountSpecCache
+
+    contexthub: MountConfigMountSandboxapiGcsBucketMountSpecContexthub
+
+    git: MountConfigMountSandboxapiGcsBucketMountSpecGit
+
+    read_only: bool
+
+    s3: MountConfigMountSandboxapiGcsBucketMountSpecS3
+
+
+class MountConfigMountSandboxapiGitRepoMountSpecGitRef(TypedDict, total=False):
+    name: Required[str]
+
+    type: Required[Literal["branch", "tag"]]
+
+
+class MountConfigMountSandboxapiGitRepoMountSpecGit(TypedDict, total=False):
+    remote_url: Required[str]
+
+    ref: MountConfigMountSandboxapiGitRepoMountSpecGitRef
+
+    refresh_interval_seconds: int
+
+
+class MountConfigMountSandboxapiGitRepoMountSpecCache(TypedDict, total=False):
+    max_size_bytes: int
+
+    writeback_seconds: int
+
+
+class MountConfigMountSandboxapiGitRepoMountSpecContexthub(TypedDict, total=False):
+    repo: Required[str]
+    """Repo is the Context Hub repository to sync, as "owner/repo" (e.g.
+
+    "-/my-agent", where "-" is the current workspace). The repo's latest commit tree
+    is mirrored into the mount path.
+    """
+
+    initial_pull_only: bool
+    """
+    InitialPullOnly syncs the repo once at startup instead of polling for updates
+    for the sandbox's lifetime.
+    """
+
+
+class MountConfigMountSandboxapiGitRepoMountSpecGcs(TypedDict, total=False):
+    bucket: Required[str]
+
+    prefix: str
+
+
+class MountConfigMountSandboxapiGitRepoMountSpecS3(TypedDict, total=False):
+    bucket: Required[str]
+
+    region: Required[str]
+
+    endpoint_url: str
+
+    path_style: bool
+
+    prefix: str
+
+
+class MountConfigMountSandboxapiGitRepoMountSpec(TypedDict, total=False):
+    id: Required[str]
+
+    git: Required[MountConfigMountSandboxapiGitRepoMountSpecGit]
+
+    mount_path: Required[str]
+
+    type: Required[Literal["s3", "gcs", "git", "contexthub"]]
+
+    cache: MountConfigMountSandboxapiGitRepoMountSpecCache
+
+    contexthub: MountConfigMountSandboxapiGitRepoMountSpecContexthub
+
+    gcs: MountConfigMountSandboxapiGitRepoMountSpecGcs
+
+    read_only: bool
+
+    s3: MountConfigMountSandboxapiGitRepoMountSpecS3
+
+
+class MountConfigMountSandboxapiContextHubRepoMountSpecContexthub(TypedDict, total=False):
+    repo: Required[str]
+    """Repo is the Context Hub repository to sync, as "owner/repo" (e.g.
+
+    "-/my-agent", where "-" is the current workspace). The repo's latest commit tree
+    is mirrored into the mount path.
+    """
+
+    initial_pull_only: bool
+    """
+    InitialPullOnly syncs the repo once at startup instead of polling for updates
+    for the sandbox's lifetime.
+    """
+
+
+class MountConfigMountSandboxapiContextHubRepoMountSpecCache(TypedDict, total=False):
+    max_size_bytes: int
+
+    writeback_seconds: int
+
+
+class MountConfigMountSandboxapiContextHubRepoMountSpecGcs(TypedDict, total=False):
+    bucket: Required[str]
+
+    prefix: str
+
+
+class MountConfigMountSandboxapiContextHubRepoMountSpecGitRef(TypedDict, total=False):
+    name: Required[str]
+
+    type: Required[Literal["branch", "tag"]]
+
+
+class MountConfigMountSandboxapiContextHubRepoMountSpecGit(TypedDict, total=False):
+    remote_url: Required[str]
+
+    ref: MountConfigMountSandboxapiContextHubRepoMountSpecGitRef
+
+    refresh_interval_seconds: int
+
+
+class MountConfigMountSandboxapiContextHubRepoMountSpecS3(TypedDict, total=False):
+    bucket: Required[str]
+
+    region: Required[str]
+
+    endpoint_url: str
+
+    path_style: bool
+
+    prefix: str
+
+
+class MountConfigMountSandboxapiContextHubRepoMountSpec(TypedDict, total=False):
+    id: Required[str]
+
+    contexthub: Required[MountConfigMountSandboxapiContextHubRepoMountSpecContexthub]
+
+    mount_path: Required[str]
+
+    type: Required[Literal["s3", "gcs", "git", "contexthub"]]
+
+    cache: MountConfigMountSandboxapiContextHubRepoMountSpecCache
+
+    gcs: MountConfigMountSandboxapiContextHubRepoMountSpecGcs
+
+    git: MountConfigMountSandboxapiContextHubRepoMountSpecGit
+
+    read_only: bool
+
+    s3: MountConfigMountSandboxapiContextHubRepoMountSpecS3
+
+
+MountConfigMount: TypeAlias = Union[
+    MountConfigMountSandboxapiS3BucketMountSpec,
+    MountConfigMountSandboxapiGcsBucketMountSpec,
+    MountConfigMountSandboxapiGitRepoMountSpec,
+    MountConfigMountSandboxapiContextHubRepoMountSpec,
+]
+
+
+class MountConfig(TypedDict, total=False):
+    auth: MountConfigAuth
+
+    mounts: Iterable[MountConfigMount]
+
+
+class ProxyConfigAccessControl(TypedDict, total=False):
+    allow_list: SequenceNotStr[str]
+
+    deny_list: SequenceNotStr[str]
+
+
+class ProxyConfigCallbackRequestHeader(TypedDict, total=False):
+    name: Required[str]
+
+    type: Required[Literal["plaintext", "opaque", "workspace_secret"]]
+
+    is_set: bool
+
+    value: str
+
+
+class ProxyConfigCallback(TypedDict, total=False):
+    match_hosts: Required[SequenceNotStr[str]]
+
+    ttl_seconds: Required[int]
+
+    url: Required[str]
+
+    full_request: bool
+
+    request_headers: Iterable[ProxyConfigCallbackRequestHeader]
+
+
+class ProxyConfigRuleAwsSandboxesProxyAwsRoleConfig(TypedDict, total=False):
+    role_arn: Required[str]
+    """
+    RoleARN selects automatically renewed IAM-role credentials instead of static
+    keys. Access follows the role's effective AWS permissions, not the sandbox's
+    mount scope. Configure at creation; the role cannot be changed afterward.
+    """
+
+
+class ProxyConfigRuleAwsSandboxesProxyAwsStaticConfigAccessKeyID(TypedDict, total=False):
+    type: Required[Literal["plaintext", "opaque", "workspace_secret"]]
+
+    is_set: bool
+
+    value: str
+
+
+class ProxyConfigRuleAwsSandboxesProxyAwsStaticConfigSecretAccessKey(TypedDict, total=False):
+    type: Required[Literal["plaintext", "opaque", "workspace_secret"]]
+
+    is_set: bool
+
+    value: str
+
+
+class ProxyConfigRuleAwsSandboxesProxyAwsStaticConfig(TypedDict, total=False):
+    access_key_id: Required[ProxyConfigRuleAwsSandboxesProxyAwsStaticConfigAccessKeyID]
+
+    secret_access_key: Required[ProxyConfigRuleAwsSandboxesProxyAwsStaticConfigSecretAccessKey]
+
+    role_arn: Literal[""]
+    """
+    RoleARN selects automatically renewed IAM-role credentials instead of static
+    keys. Access follows the role's effective AWS permissions, not the sandbox's
+    mount scope. Configure at creation; the role cannot be changed afterward.
+    """
+
+
+ProxyConfigRuleAws: TypeAlias = Union[
+    ProxyConfigRuleAwsSandboxesProxyAwsRoleConfig, ProxyConfigRuleAwsSandboxesProxyAwsStaticConfig
+]
+
+
+class ProxyConfigRuleGcpServiceAccountJson(TypedDict, total=False):
+    type: Required[Literal["plaintext", "opaque", "workspace_secret"]]
+
+    is_set: bool
+
+    value: str
+
+
+class ProxyConfigRuleGcp(TypedDict, total=False):
+    scopes: Required[SequenceNotStr[str]]
+
+    service_account_json: Required[ProxyConfigRuleGcpServiceAccountJson]
+
+
+class ProxyConfigRuleHeader(TypedDict, total=False):
+    name: Required[str]
+
+    type: Required[Literal["plaintext", "opaque", "workspace_secret"]]
+
+    is_set: bool
+
+    value: str
+
+
+class ProxyConfigRule(TypedDict, total=False):
+    name: Required[str]
+
+    aws: ProxyConfigRuleAws
+
+    description: str
+    """
+    Description says what this rule lets the sandbox reach, so an agent driving the
+    sandbox can be told its capabilities. At most 1024 characters.
+    """
+
+    enabled: bool
+
+    env_vars: Dict[str, str]
+    """
+    EnvVars are plaintext env vars set for every command in the sandbox while this
+    rule is enabled. Use them for tools that refuse to run unless a credential env
+    var is present (e.g. gh needs GH_TOKEN) even though this rule injects the real
+    credential on the wire — set a dummy value here so the command starts. Explicit
+    per-sandbox env_vars win over these, and provider-managed (AWS/GCP) vars win
+    over both.
+    """
+
+    gcp: ProxyConfigRuleGcp
+
+    headers: Iterable[ProxyConfigRuleHeader]
+
+    match_headers: SequenceNotStr[str]
+    """
+    MatchHeaders restricts a header injection rule to requests carrying every listed
+    header, each written "name: value" with a lowercase name and an exact value.
+    Pair with headers of the same name to swap a placeholder the sandbox sends (e.g.
+    "authorization: Bearer account-b") for a real credential, so one host can serve
+    several accounts. Rules are evaluated in order and the first match wins.
+    """
+
+    match_hosts: SequenceNotStr[str]
+    """MatchHosts is only accepted for header injection rules.
+
+    Provider auth rules use built-in host matching.
+    """
+
+    match_paths: SequenceNotStr[str]
+
+    type: str
+
+
+class ProxyConfig(TypedDict, total=False):
+    access_control: ProxyConfigAccessControl
+
+    callbacks: Iterable[ProxyConfigCallback]
+
+    description: str
+    """
+    Description says what this configuration as a whole lets the sandbox reach,
+    complementing the per-rule descriptions. At most 1024 characters.
+    """
+
+    no_proxy: SequenceNotStr[str]
+
+    rules: Iterable[ProxyConfigRule]
+
+
+class RunConfig(TypedDict, total=False):
+    """
+    RunConfig overrides the snapshot's run config for this sandbox: user and
+    work_dir replace the snapshot's, env_vars merge over it. The result is
+    what the sandbox boots with, and what a snapshot captured from it carries.
+    """
+
+    env_vars: Dict[str, str]
+
+    user: str
+
+    work_dir: str
