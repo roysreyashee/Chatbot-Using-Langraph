@@ -2,7 +2,7 @@
 import streamlit as st
 
 # Import the custom chatbot backend and HumanMessage for sending user input.
-from backend import chatbot
+from langgraph_database_backend import chatbot, retrieve_all_threads
 from langchain_core.messages import HumanMessage
 import uuid
 
@@ -35,7 +35,7 @@ if 'thread_id' not in st.session_state:
 
 #to show the ongoing chat threads in the sidebar
 if 'chat_threads' not in st.session_state:
-    st.session_state['chat_threads']=[]
+    st.session_state['chat_threads']= retrieve_all_threads()
 
 add_thread(st.session_state['thread_id'])
 
